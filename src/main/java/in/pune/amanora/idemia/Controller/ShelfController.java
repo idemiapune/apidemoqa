@@ -51,4 +51,22 @@ public class ShelfController {
 		}
 		return null;
 	}
+
+	/*
+	 * Delete a particular shelf from a rack
+	 * 
+	 * @Path variable needed for shelfid 'id'
+	 * 
+	 * @Author : Shraddha
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/shelves/{id}")
+	public Shelf removeShelfDetails(@PathVariable("id") long id) {
+		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
+			if (RackController.rack.getShelves().get(i).getId() == id) {
+				return RackController.rack.getShelves().remove(i);
+			}
+		}
+		return null;
+	}
+
 }
