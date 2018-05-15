@@ -5,6 +5,7 @@ import in.pune.amanora.idemia.model.Book;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,5 +50,21 @@ public class BookController {
 		}
 		return null;
 
+	}
+	
+	/*
+	 * Below API is for adding new Book in a shelf
+	 * @RequestBody Book object
+	 * @author Riya
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/shelves/{id}/books")
+	public Book addBook(@PathVariable("id") long id, @RequestBody Book book) {
+		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
+			if (RackController.rack.getShelves().get(i).getId() == id) {
+				RackController.rack.getShelves().get(i).getBooks().add(book);
+				return book;
+			}
+		}
+		return book;
 	}
 }
