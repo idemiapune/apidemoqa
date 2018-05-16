@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.pune.amanora.idemia.model.Book;
 import in.pune.amanora.idemia.model.Shelf;
 
 @RestController
@@ -52,19 +51,44 @@ public class ShelfController {
 		}
 		return null;
 	}
-	
+
+	/*
+	 * Delete a particular shelf from a rack
+	 * 
+	 * @Path variable needed for shelfid 'id'
+	 * 
+	 * @Author : Shraddha
+	 */
+	@RequestMapping(method = RequestMethod.DELETE, value = "/shelves/{id}")
+	public Shelf removeShelfDetails(@PathVariable("id") long id) {
+		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
+			if (RackController.rack.getShelves().get(i).getId() == id) {
+				return RackController.rack.getShelves().remove(i);
+			}
+		}
+		return null;
+	}
+
+	/*
+	 * Updated Shelf details as per Id provided Params : @PathVariable id : Shelf Id
+	 * 
+	 * @RequestBody : Shelf object
+	 * 
+	 * @author Riya
+	 */
+
 	@RequestMapping(method = RequestMethod.PUT, value = "/shelves/{id}")
 	public Shelf updateShelf(@PathVariable("id") long id, @RequestBody Shelf shelf) {
 		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
 			if (RackController.rack.getShelves().get(i).getId() == id) {
-				if(shelf.getId() != 0) 
+				if (shelf.getId() != 0)
 					RackController.rack.getShelves().get(i).setId(shelf.getId());
-				if(shelf.getCapacity() != 0) 
+				if (shelf.getCapacity() != 0)
 					RackController.rack.getShelves().get(i).setCapacity(shelf.getCapacity());
-				if(!shelf.getBooks().isEmpty()) 
+				if (!shelf.getBooks().isEmpty())
 					RackController.rack.getShelves().get(i).setBooks(shelf.getBooks());
 			}
-	}
+		}
 		return shelf;
 	}
 }
