@@ -55,6 +55,29 @@ public class BookController {
 		return null;
 
 	}
+	
+	/* Delete a particular book in a shelf
+	 * @ Two Path variable needed for shelfid 'id' & bookid 'bookid'
+	 * @Author : Swarshri
+	 */
+	
+	@RequestMapping(method = RequestMethod.DELETE, value = "/shelves/{id}/books/{bookid}")
+	public Book deleteBook(@PathVariable("id") long id, @PathVariable("bookid") long bookid) {
+		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
+
+			if (RackController.rack.getShelves().get(i).getId() == id) {
+				for (int j = 0; j < RackController.rack.getShelves().get(i).getBooks().size(); j++) {
+
+					if (RackController.rack.getShelves().get(i).getBooks().get(j).getId() == bookid) {
+						return RackController.rack.getShelves().get(i).getBooks().remove(j);
+					}
+				}
+			}
+
+		}
+		return null;
+
+	}
 
 	/*
 	 * Below API is for adding new Book in a shelf
