@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.pune.amanora.idemia.Exception.NotFoundException;
 import in.pune.amanora.idemia.controller.RackController;
+import in.pune.amanora.idemia.exception.NotFoundException;
 import in.pune.amanora.idemia.model.Shelf;
 
 @RestController

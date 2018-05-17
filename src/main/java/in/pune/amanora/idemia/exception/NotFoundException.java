@@ -1,4 +1,4 @@
-package in.pune.amanora.idemia.Exception;
+package in.pune.amanora.idemia.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
