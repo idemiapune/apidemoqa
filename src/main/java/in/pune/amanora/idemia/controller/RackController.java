@@ -1,4 +1,4 @@
-package in.pune.amanora.idemia.Controller;
+package in.pune.amanora.idemia.controller;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

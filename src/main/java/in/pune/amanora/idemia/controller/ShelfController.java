@@ -1,13 +1,16 @@
-package in.pune.amanora.idemia.Controller;
+package in.pune.amanora.idemia.controller;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import in.pune.amanora.idemia.Exception.NotFoundException;
+import in.pune.amanora.idemia.controller.RackController;
 import in.pune.amanora.idemia.model.Shelf;
 
 @RestController
@@ -20,7 +23,7 @@ public class ShelfController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/shelves")
 	public List<Shelf> getShelves() {
-		return RackController.rack.getShelves();
+			return RackController.rack.getShelves();
 	}
 
 	/*
@@ -42,14 +45,14 @@ public class ShelfController {
 	 * 
 	 * @author Riya
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/shelves/{id}")
-	public Shelf getShelfDetails(@PathVariable("id") long id) {
+	@RequestMapping(method = RequestMethod.GET, value = "/shelves/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Shelf getShelfDetails(@PathVariable("id") long id) throws NotFoundException{
 		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
 			if (RackController.rack.getShelves().get(i).getId() == id) {
 				return RackController.rack.getShelves().get(i);
 			}
 		}
-		return null;
+		throw new NotFoundException("Shelf Not Found With ID Provided");
 	}
 
 	/*

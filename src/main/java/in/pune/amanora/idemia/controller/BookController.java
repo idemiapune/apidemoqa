@@ -1,4 +1,4 @@
-package in.pune.amanora.idemia.Controller;
+package in.pune.amanora.idemia.controller;
 
 import in.pune.amanora.idemia.model.Book;
 
