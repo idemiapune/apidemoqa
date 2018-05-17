@@ -1,5 +1,6 @@
 package in.pune.amanora.idemia.Controller;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,12 +33,36 @@ public class RackController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/rack")
 	public Rack addRack(@RequestBody Rack rack) {
-		if (RackController.rack.getId() == 0 ) {
+		if (RackController.rack.getId() == 0) {
 			RackController.rack.setId(rack.getId());
 			RackController.rack.setNoOfShelves(rack.getNoOfShelves());
 			RackController.rack.setShelves(rack.getShelves());
 		}
 		return RackController.rack;
+	}
+
+	/*
+	 * below API is for updating rack properties
+	 * 
+	 * @PathVariable id rackid
+	 * 
+	 * @RequestBody rack object
+	 * 
+	 * @author Shraddha
+	 */
+	@RequestMapping(method = RequestMethod.PUT, value = "/rack/{id}")
+	public Rack updateRack(@PathVariable("id") long id, @RequestBody Rack rack) {
+
+		if (RackController.rack.getId() == id) {
+			if (rack.getId() != 0)
+				RackController.rack.setId(rack.getId());
+			if (rack.getNoOfShelves() != 0)
+				RackController.rack.setNoOfShelves(rack.getNoOfShelves());
+			if (!rack.getShelves().isEmpty())
+				RackController.rack.setShelves(rack.getShelves());
+		}
+
+		return rack;
 	}
 
 }
