@@ -64,5 +64,25 @@ public class RackController {
 
 		return rack;
 	}
+	/*
+	 * below API is for deleting rack properties
+	 * 
+	 * @PathVariable id rackid
+	 * 
+	 * @RequestBody rack object
+	 * 
+	 * @author Riya
+	 */
 
+	@RequestMapping(method = RequestMethod.DELETE, value = "/rack/{id}")
+	public Rack removerack(@PathVariable("id") long id) {
+
+		if (RackController.rack.getId() == id) {
+			RackController.rack = new Rack();
+
+			return RackController.rack;
+		}
+
+		return null;
+	}
 }
