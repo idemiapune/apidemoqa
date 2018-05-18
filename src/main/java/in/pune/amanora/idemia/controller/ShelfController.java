@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import in.pune.amanora.idemia.controller.RackController;
+import in.pune.amanora.idemia.exception.ExeedLimitException;
 import in.pune.amanora.idemia.exception.NotFoundException;
 import in.pune.amanora.idemia.model.Shelf;
+import in.pune.amanora.idemia.util.ErrorMessage;
 
 @RestController
 public class ShelfController {
@@ -22,8 +24,12 @@ public class ShelfController {
 	 * @author Shraddha
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/shelves")
-	public List<Shelf> getShelves() {
+	public List<Shelf> getShelves() throws NotFoundException {
+		if (RackController.rack.getShelves() != null && !RackController.rack.getShelves().isEmpty()) {
 			return RackController.rack.getShelves();
+		} else {
+			throw new NotFoundException(ErrorMessage.NO_SHELF);
+		}
 	}
 
 	/*
@@ -34,9 +40,13 @@ public class ShelfController {
 	 * @author Shraddha
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/shelves")
-	public Shelf addShelf(@RequestBody Shelf shelf) {
-		RackController.rack.getShelves().add(shelf);
-		return shelf;
+	public Shelf addShelf(@RequestBody Shelf shelf) throws ExeedLimitException {
+		if (RackController.rack.getShelves().size() >= RackController.rack.getNoOfShelves()) {
+			throw new ExeedLimitException(ErrorMessage.SHELF_NOT_FOUND);
+		} else {
+			RackController.rack.getShelves().add(shelf);
+			return shelf;
+		}
 
 	}
 
@@ -46,13 +56,15 @@ public class ShelfController {
 	 * @author Riya
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/shelves/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Shelf getShelfDetails(@PathVariable("id") long id) throws NotFoundException{
-		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
-			if (RackController.rack.getShelves().get(i).getId() == id) {
-				return RackController.rack.getShelves().get(i);
+	public Shelf getShelfDetails(@PathVariable("id") long id) throws NotFoundException {
+		if (RackController.rack.getShelves() != null && !RackController.rack.getShelves().isEmpty()) {
+			for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
+				if (RackController.rack.getShelves().get(i).getId() == id) {
+					return RackController.rack.getShelves().get(i);
+				}
 			}
 		}
-		throw new NotFoundException("Shelf Not Found With ID Provided");
+		throw new NotFoundException(ErrorMessage.SHELF_NOT_FOUND);
 	}
 
 	/*
@@ -63,13 +75,15 @@ public class ShelfController {
 	 * @Author : Shraddha
 	 */
 	@RequestMapping(method = RequestMethod.DELETE, value = "/shelves/{id}")
-	public Shelf removeShelfDetails(@PathVariable("id") long id) {
-		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
-			if (RackController.rack.getShelves().get(i).getId() == id) {
-				return RackController.rack.getShelves().remove(i);
+	public Shelf removeShelfDetails(@PathVariable("id") long id) throws NotFoundException {
+		if (RackController.rack.getShelves() != null && !RackController.rack.getShelves().isEmpty()) {
+			for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
+				if (RackController.rack.getShelves().get(i).getId() == id) {
+					return RackController.rack.getShelves().remove(i);
+				}
 			}
 		}
-		return null;
+		throw new NotFoundException(ErrorMessage.SHELF_NOT_FOUND);
 	}
 
 	/*
@@ -81,17 +95,23 @@ public class ShelfController {
 	 */
 
 	@RequestMapping(method = RequestMethod.PUT, value = "/shelves/{id}")
-	public Shelf updateShelf(@PathVariable("id") long id, @RequestBody Shelf shelf) {
-		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
-			if (RackController.rack.getShelves().get(i).getId() == id) {
-				if (shelf.getId() != 0)
-					RackController.rack.getShelves().get(i).setId(shelf.getId());
-				if (shelf.getCapacity() != 0)
-					RackController.rack.getShelves().get(i).setCapacity(shelf.getCapacity());
-				if (!shelf.getBooks().isEmpty())
-					RackController.rack.getShelves().get(i).setBooks(shelf.getBooks());
+	public Shelf updateShelf(@PathVariable("id") long id, @RequestBody Shelf shelf) throws NotFoundException {
+		if (RackController.rack.getShelves() != null && !RackController.rack.getShelves().isEmpty()) {
+			for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
+				if (RackController.rack.getShelves().get(i).getId() == id) {
+					if (shelf.getId() != 0)
+						RackController.rack.getShelves().get(i).setId(shelf.getId());
+					if (shelf.getCapacity() != 0)
+						RackController.rack.getShelves().get(i).setCapacity(shelf.getCapacity());
+					if (!shelf.getBooks().isEmpty())
+						RackController.rack.getShelves().get(i).setBooks(shelf.getBooks());
+
+					return shelf;
+				}
 			}
 		}
-		return shelf;
+		throw new NotFoundException(ErrorMessage.SHELF_NOT_FOUND);
+
 	}
+
 }
