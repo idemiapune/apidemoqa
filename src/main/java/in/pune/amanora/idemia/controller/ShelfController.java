@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.pune.amanora.idemia.controller.RackController;
-import in.pune.amanora.idemia.exception.ExeedLimitException;
+import in.pune.amanora.idemia.exception.CommonException;
 import in.pune.amanora.idemia.exception.NotFoundException;
 import in.pune.amanora.idemia.model.Shelf;
 import in.pune.amanora.idemia.util.ErrorMessage;
@@ -40,15 +39,21 @@ public class ShelfController {
 	 * @author Shraddha
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/shelves")
-	public Shelf addShelf(@RequestBody Shelf shelf) throws ExeedLimitException {
+	public Shelf addShelf(@RequestBody Shelf shelf) throws CommonException {
+		for(int i=0; i< RackController.rack.getShelves().size() ; i++)
+			if(RackController.rack.getShelves().get(i).getId() == shelf.getId())
+				throw new CommonException(ErrorMessage.Dublicate_Shelf);
+			
+		
 		if (RackController.rack.getShelves().size() >= RackController.rack.getNoOfShelves()) {
-			throw new ExeedLimitException(ErrorMessage.SHELF_NOT_FOUND);
+			throw new CommonException(ErrorMessage.SHELF_NOT_FOUND);
 		} else {
 			RackController.rack.getShelves().add(shelf);
 			return shelf;
 		}
+		}
 
-	}
+	
 
 	/*
 	 * Get shelf details for requested shelf Id

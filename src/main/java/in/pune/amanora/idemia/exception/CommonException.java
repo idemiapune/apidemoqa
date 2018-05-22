@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.CONFLICT)
-public class ExeedLimitException extends Exception {
+public class CommonException extends Exception {
 
 	/**
 	 * Exception will send : 
@@ -13,7 +13,7 @@ public class ExeedLimitException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ExeedLimitException(String message) {
+	public CommonException(String message) {
 		super(message);
 	}
 
