@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import in.pune.amanora.idemia.exception.NotFoundException;
 import in.pune.amanora.idemia.model.Rack;
+import in.pune.amanora.idemia.util.ErrorMessage;
 
 @RestController
 public class RackController {
@@ -51,19 +53,25 @@ public class RackController {
 	 * @author Shraddha
 	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/rack/{id}")
-	public Rack updateRack(@PathVariable("id") long id, @RequestBody Rack rack) {
+	public Rack updateRack(@PathVariable("id") long id, @RequestBody Rack rack)
+			throws NotFoundException {
+		if (RackController.rack != null) {
+			if (RackController.rack.getId() == id) {
+				if (rack.getId() != 0)
+					RackController.rack.setId(rack.getId());
+				if (rack.getNoOfShelves() != 0)
+					RackController.rack.setNoOfShelves(rack.getNoOfShelves());
+				if (!rack.getShelves().isEmpty())
+					RackController.rack.setShelves(rack.getShelves());
 
-		if (RackController.rack.getId() == id) {
-			if (rack.getId() != 0)
-				RackController.rack.setId(rack.getId());
-			if (rack.getNoOfShelves() != 0)
-				RackController.rack.setNoOfShelves(rack.getNoOfShelves());
-			if (!rack.getShelves().isEmpty())
-				RackController.rack.setShelves(rack.getShelves());
+				return rack;
+			}
+
 		}
+		throw new NotFoundException(ErrorMessage.RACK_ID_NOT_FOUND);
 
-		return rack;
 	}
+
 	/*
 	 * below API is for deleting rack properties
 	 * 
@@ -75,14 +83,16 @@ public class RackController {
 	 */
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/rack/{id}")
-	public Rack removerack(@PathVariable("id") long id) {
+	public Rack removerack(@PathVariable("id") long id)
+			throws NotFoundException {
+		if (RackController.rack != null) {
+			if (RackController.rack.getId() == id) {
+				RackController.rack = new Rack();
 
-		if (RackController.rack.getId() == id) {
-			RackController.rack = new Rack();
+				return RackController.rack;
+			}
 
-			return RackController.rack;
 		}
-
-		return null;
+		throw new NotFoundException(ErrorMessage.RACK_ID_NOT_FOUND);
 	}
 }
