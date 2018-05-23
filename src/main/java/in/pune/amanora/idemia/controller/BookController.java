@@ -1,6 +1,8 @@
 package in.pune.amanora.idemia.controller;
 
+import in.pune.amanora.idemia.exception.NotFoundException;
 import in.pune.amanora.idemia.model.Book;
+import in.pune.amanora.idemia.util.ErrorMessage;
 
 import java.util.List;
 
@@ -21,13 +23,13 @@ public class BookController {
 	 * @Author : Swarshri
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/shelves/{id}/books")
-	public List<Book> getBooks(@PathVariable("id") long id) {
+	public List<Book> getBooks(@PathVariable("id") long id) throws NotFoundException {
 		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
 			if (RackController.rack.getShelves().get(i).getId() == id) {
 				return RackController.rack.getShelves().get(i).getBooks();
 			}
 		}
-		return null;
+		throw new NotFoundException(ErrorMessage.SHELF_NOT_FOUND);
 	}
 
 	/*
@@ -39,7 +41,7 @@ public class BookController {
 	 */
 
 	@RequestMapping(method = RequestMethod.GET, value = "/shelves/{id}/books/{bookid}")
-	public Book getBookDetails(@PathVariable("id") long id, @PathVariable("bookid") long bookid) {
+	public Book getBookDetails(@PathVariable("id") long id, @PathVariable("bookid") long bookid) throws NotFoundException {
 		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
 
 			if (RackController.rack.getShelves().get(i).getId() == id) {
@@ -47,22 +49,31 @@ public class BookController {
 
 					if (RackController.rack.getShelves().get(i).getBooks().get(j).getId() == bookid) {
 						return RackController.rack.getShelves().get(i).getBooks().get(j);
-					}
+						}
+						
+						else {
+							 throw new NotFoundException(ErrorMessage.BOOK_NOT_FOUND);
+							 }
+					
+						}
 				}
-			}
 
-		}
-		return null;
+			}
+		throw new NotFoundException(ErrorMessage.SHELF_NOT_FOUND);
+
 
 	}
-	
-	/* Delete a particular book in a shelf
+
+	/*
+	 * Delete a particular book in a shelf
+	 * 
 	 * @ Two Path variable needed for shelfid 'id' & bookid 'bookid'
+	 * 
 	 * @Author : Swarshri
 	 */
-	
+
 	@RequestMapping(method = RequestMethod.DELETE, value = "/shelves/{id}/books/{bookid}")
-	public Book deleteBook(@PathVariable("id") long id, @PathVariable("bookid") long bookid) {
+	public Book deleteBook(@PathVariable("id") long id, @PathVariable("bookid") long bookid) throws NotFoundException {
 		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
 
 			if (RackController.rack.getShelves().get(i).getId() == id) {
@@ -71,11 +82,16 @@ public class BookController {
 					if (RackController.rack.getShelves().get(i).getBooks().get(j).getId() == bookid) {
 						return RackController.rack.getShelves().get(i).getBooks().remove(j);
 					}
+					else {
+						throw new NotFoundException(ErrorMessage.BOOK_NOT_FOUND);
+					
+						
+					}
 				}
 			}
 
 		}
-		return null;
+		throw new NotFoundException(ErrorMessage.SHELF_NOT_FOUND);
 
 	}
 
@@ -102,10 +118,10 @@ public class BookController {
 	 * 
 	 * two @PathVariable is given 1st(id) is for shelf and 2nd(bookid) is for Book
 	 * 
-	 * @author Shraddha
+	 * @author Shraddha   
 	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/shelves/{id}/books/{bookid}")
-	public Book updateBook(@PathVariable("id") long id, @RequestBody Book book, @PathVariable("bookid") long bookid) {
+	public Book updateBook(@PathVariable("id") long id, @RequestBody Book book, @PathVariable("bookid") long bookid) throws NotFoundException {
 		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
 
 			if (RackController.rack.getShelves().get(i).getId() == id) {
@@ -128,9 +144,14 @@ public class BookController {
 				}
 				return book;
 			}
+			else {
+				throw new NotFoundException(ErrorMessage.BOOK_NOT_FOUND);
+			
+				
+			}
 
 		}
-		return null;
+		throw new NotFoundException(ErrorMessage.SHELF_NOT_FOUND);
 
 	}
 }
