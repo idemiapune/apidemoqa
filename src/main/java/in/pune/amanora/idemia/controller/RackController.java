@@ -53,7 +53,8 @@ public class RackController {
 	 * @author Shraddha
 	 */
 	@RequestMapping(method = RequestMethod.PUT, value = "/rack/{id}")
-	public Rack updateRack(@PathVariable("id") long id, @RequestBody Rack rack) {
+	public Rack updateRack(@PathVariable("id") long id, @RequestBody Rack rack)
+			throws NotFoundException {
 		if (RackController.rack != null) {
 			if (RackController.rack.getId() == id) {
 				if (rack.getId() != 0)
@@ -62,10 +63,12 @@ public class RackController {
 					RackController.rack.setNoOfShelves(rack.getNoOfShelves());
 				if (!rack.getShelves().isEmpty())
 					RackController.rack.setShelves(rack.getShelves());
+
+				return rack;
 			}
 
 		}
-		return rack;
+		throw new NotFoundException(ErrorMessage.RACK_ID_NOT_FOUND);
 
 	}
 
