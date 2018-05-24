@@ -46,17 +46,20 @@ public class BookController {
 		for (int i = 0; i < RackController.rack.getShelves().size(); i++) {
 
 			if (RackController.rack.getShelves().get(i).getId() == id) {
-				for (int j = 0; j < RackController.rack.getShelves().get(i).getBooks().size(); j++) {
+				for (int j = 0; j < RackController.rack.getShelves().get(i)
+						.getBooks().size(); j++) {
 
-					if (RackController.rack.getShelves().get(i).getBooks().get(j).getId() == bookid) {
-						return RackController.rack.getShelves().get(i).getBooks().get(j);
+					if (RackController.rack.getShelves().get(i).getBooks()
+							.get(j).getId() == bookid) {
+						return RackController.rack.getShelves().get(i)
+								.getBooks().get(j);
 					}
 
-					else {
-						throw new NotFoundException(ErrorMessage.BOOK_NOT_FOUND);
-					}
+					//
 
 				}
+				throw new NotFoundException(ErrorMessage.BOOK_NOT_FOUND);
+
 			}
 
 		}
